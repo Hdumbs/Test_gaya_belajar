@@ -34,7 +34,7 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan aplikasi:
 
 ### 1. Clone & Install Dependensi
 ```bash
-git clone <url-repository-kamu>
+git clone <https://github.com/Hdumbs/Test_gaya_belajar>
 cd edustyle-ai
 composer install
 npm install
