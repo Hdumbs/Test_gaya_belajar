@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Models\HasilDiagnosis;
 
 class HasilReport extends Component
 {
@@ -118,7 +119,26 @@ class HasilReport extends Component
         }
 
         $this->aiResponse = $decoded;
+        try {
+            HasilDiagnosis::create([
+                'nama'            => $this->siswa['nama'],
+                'nisn'            => $this->siswa['nisn'] ?? '-',
+                'sekolah'         => $this->siswa['sekolah'],
+                'kelas'           => $this->siswa['kelas'] ?? '-',
+                'jurusan'         => $this->siswa['jurusan'] ?? '-',
+                'skor_visual'     => $this->persentase['visual'],
+                'skor_auditori'   => $this->persentase['auditori'],
+                'skor_kinestetik' => $this->persentase['kinestetik'],
+                'gaya_dominan'    => $this->gayaDominan,
+                'ai_response'     => $this->aiResponse, // Otomatis jadi JSON berkat $casts
+            ]);
+        } catch (\Throwable $e) {
+            // Log error jika gagal simpan ke DB, tapi user tetap bisa lihat hasilnya di layar
+            Log::error('Gagal simpan ke database: ' . $e->getMessage());
+        }
+        // -------------------------------------------------------
     }
+    
 
     private function setFallback($pesanError = 'Menunggu integrasi sistem.')
     {
